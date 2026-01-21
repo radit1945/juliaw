@@ -23,7 +23,6 @@
             left: 0;
             z-index: 1;
         }
-        /* Tulisan di bawah - Dipastikan muncul di depan */
         .pesan-bawah {
             position: absolute;
             bottom: 15%; 
@@ -32,21 +31,21 @@
             color: #ffb6c1; 
             font-size: 20px;
             font-weight: bold;
-            z-index: 99; /* Agar selalu di depan animasi */
-            text-shadow: 0 0 15px rgba(255, 182, 193, 0.8);
-            animation: breathe 4s infinite ease-in-out;
+            z-index: 99;
+            text-shadow: 0 0 10px rgba(255, 182, 193, 0.8);
+            animation: breathe 3s infinite ease-in-out;
         }
 
         @keyframes breathe {
-            0%, 100% { opacity: 0.6; transform: scale(0.95); }
-            50% { opacity: 1; transform: scale(1.05); }
+            0%, 100% { opacity: 0.6; transform: scale(0.98); }
+            50% { opacity: 1; transform: scale(1.02); }
         }
     </style>
 </head>
 <body>
 
     <canvas id="heartCanvas"></canvas>
-    <div class="pesan-bawah">semangat yaa kerjanya sayangg</div>
+    <div class="pesan-bawah">semangat yaa kerjanya sayangg 😍❤️</div>
 
     <script>
         const canvas = document.getElementById('heartCanvas');
@@ -61,13 +60,13 @@
 
         const words = "juliaaw";
         const particles = [];
-        const particleCount = 80; // Dikurangi agar tidak terlalu menumpuk/tebal
+        const particleCount = 100;
 
         class Particle {
             constructor(index) {
                 this.t = (index / particleCount) * Math.PI * 2;
-                this.speed = 0.002; // SANGAT PELAN agar bisa dibaca
-                this.size = 15; 
+                this.speed = 0.004; 
+                this.size = 14; 
             }
 
             update() {
@@ -81,10 +80,13 @@
             }
 
             draw() {
+                ctx.shadowBlur = 5;
+                ctx.shadowColor = "#ffb6c1";
                 ctx.fillStyle = "#ffb6c1"; 
                 ctx.font = `bold ${this.size}px Arial`;
                 ctx.textAlign = "center";
                 ctx.fillText(words, this.x, this.y);
+                ctx.shadowBlur = 0;
             }
         }
 
@@ -93,7 +95,6 @@
         }
 
         function animate() {
-            // Memberikan background solid setiap frame agar tulisan tidak menumpuk jadi blur
             ctx.fillStyle = 'black';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             
