@@ -12,38 +12,40 @@
             background-color: black;
             font-family: 'Arial', sans-serif;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
         }
         canvas {
             display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
         }
-        /* Tulisan di bawah hati */
+        /* Tulisan di bawah - Dipastikan muncul di depan */
         .pesan-bawah {
             position: absolute;
-            bottom: 20%; /* Posisi agak naik sedikit dari bawah agar pas di mata */
-            width: 90%;
+            bottom: 15%; 
+            width: 100%;
             text-align: center;
-            color: #ffb6c1; /* Pink muda */
-            font-size: 1.1rem;
-            font-weight: 300;
-            letter-spacing: 1px;
-            text-shadow: 0 0 10px rgba(255, 182, 193, 0.5);
-            animation: breathe 3s infinite ease-in-out;
+            color: #ffb6c1; 
+            font-size: 20px;
+            font-weight: bold;
+            z-index: 99; /* Agar selalu di depan animasi */
+            text-shadow: 0 0 15px rgba(255, 182, 193, 0.8);
+            animation: breathe 4s infinite ease-in-out;
         }
 
         @keyframes breathe {
-            0%, 100% { opacity: 0.5; transform: scale(0.98); }
-            50% { opacity: 1; transform: scale(1); }
+            0%, 100% { opacity: 0.6; transform: scale(0.95); }
+            50% { opacity: 1; transform: scale(1.05); }
         }
     </style>
 </head>
 <body>
 
     <canvas id="heartCanvas"></canvas>
-    
     <div class="pesan-bawah">semangat yaa kerjanya sayangg</div>
 
     <script>
@@ -59,31 +61,27 @@
 
         const words = "juliaaw";
         const particles = [];
-        const particleCount = 200; 
+        const particleCount = 80; // Dikurangi agar tidak terlalu menumpuk/tebal
 
         class Particle {
             constructor(index) {
                 this.t = (index / particleCount) * Math.PI * 2;
-                // Kecepatan diatur lambat (0.005) agar tulisan juliaaw bisa terbaca
-                this.speed = 0.005; 
-                this.size = 14; 
+                this.speed = 0.002; // SANGAT PELAN agar bisa dibaca
+                this.size = 15; 
             }
 
             update() {
                 this.t += this.speed;
-                // Rumus Hati
                 const x = 16 * Math.pow(Math.sin(this.t), 3);
                 const y = -(13 * Math.cos(this.t) - 5 * Math.cos(2 * this.t) - 2 * Math.cos(3 * this.t) - Math.cos(4 * this.t));
                 
-                // Responsif untuk layar iPhone
                 const scale = Math.min(canvas.width, canvas.height) / 45;
                 this.x = canvas.width / 2 + x * scale;
-                this.y = canvas.height / 2 + (y * scale) - 30; // Sedikit dinaikkan agar tidak menumpuk pesan bawah
+                this.y = canvas.height / 2 + (y * scale) - 50; 
             }
 
             draw() {
-                const opacity = 0.4 + Math.abs(Math.sin(this.t * 0.5)) * 0.6;
-                ctx.fillStyle = `rgba(255, 182, 193, ${opacity})`; 
+                ctx.fillStyle = "#ffb6c1"; 
                 ctx.font = `bold ${this.size}px Arial`;
                 ctx.textAlign = "center";
                 ctx.fillText(words, this.x, this.y);
@@ -95,8 +93,8 @@
         }
 
         function animate() {
-            // Efek trail/jejak halus
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
+            // Memberikan background solid setiap frame agar tulisan tidak menumpuk jadi blur
+            ctx.fillStyle = 'black';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             
             particles.forEach(p => {
